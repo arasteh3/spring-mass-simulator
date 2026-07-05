@@ -1,39 +1,46 @@
+"""
+Animation utilities for the spring-mass system.
+"""
+
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
-import numpy as np
+from matplotlib import animation
+
 
 def animate_response(t, x, m=1.0, k=2.0):
-    fig, ax = plt.subplots(figsize=(6, 3))
-    ax.set_xlim(-1.5, 1.5)
-    ax.set_ylim(-0.5, 0.5)
-    ax.set_xlabel("Position")
-    ax.set_yticks([])
-    ax.set_title("Mass–spring animation")
+    """
+    Animate the mass displacement over time.
 
-    ax.plot([-1.5, -1.0], [0.0, 0.0], "k", lw=2)
-    wall = plt.Rectangle((-1.0, -0.25), 0.05, 0.5, color="gray")
-    ax.add_patch(wall)
+    Parameters
+    ----------
+    t : array-like
+        Time values.
+    x : array-like
+        Displacement values.
+    m : float
+        Mass value.
+    k : float
+        Spring constant.
 
-    mass_width = 0.3
-    mass_height = 0.2
-    mass_patch = plt.Rectangle((0.0, -mass_height / 2), mass_width, mass_height, color="tab:blue")
-    ax.add_patch(mass_patch)
+    Returns
+    -------
+    animation.FuncAnimation
+        The generated animation object.
+    """
 
-    spring_line, = ax.plot([], [], "k", lw=2)
+    fig, ax = plt.subplots()
+    line, = ax.plot([], [], lw=2)
+    ax.set_xlim(t[0], t[-1])
+    ax.set_ylim(min(x), max(x))
+    ax.set_xlabel("Time")
+    ax.set_ylabel("Displacement")
 
     def init():
-        spring_line.set_data([], [])
-        return mass_patch, spring_line
+        line.set_data([], [])
+        return line,
 
     def update(frame):
-        x_pos = x[frame]
-        mass_patch.set_x(x_pos - mass_width / 2)
-
-        spring_x = np.linspace(-1.0, x_pos - mass_width / 2, 20)
-        spring_y = 0.05 * np.sin(10 * (spring_x + 1.0))
-        spring_line.set_data(spring_x, spring_y)
-
-        return mass_patch, spring_line
+        line.set_data(t[:frame], x[:frame])
+        return line,
 
     ani = animation.FuncAnimation(
         fig,

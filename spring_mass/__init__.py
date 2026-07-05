@@ -1,10 +1,12 @@
 """
-Spring–mass–damper simulator package.
+Spring-mass-damper simulator package.
 """
 
-from .dynamics import simulate_system
-from .energy import compute_energy
-from .forcing import sinusoidal_forcing
-from .bode import bode_response
-from .animation import animate_response
-from .dashboard import dashboard
+# Remove all unused imports here
+
+def dashboard():
+    """Public entry point for the spring-mass dashboard."""
+    from .dynamics import simulate_system
+    from .energy import compute_energy
+    from .bode import bode_response
+    from .animation import animate_response
