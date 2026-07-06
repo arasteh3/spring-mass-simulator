@@ -17,5 +17,5 @@ def animate_system(t, x):
         point.set_data(x[i], 0)
         return point,
 
-    ani = animation.FuncAnimation(fig, update, frames=len(t), init_func=init)
+    animation.FuncAnimation(fig, update, frames=len(t), init_func=init)
     plt.show()
