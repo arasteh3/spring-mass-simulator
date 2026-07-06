@@ -1,32 +1,70 @@
+"""
+Dynamics of the spring-mass-damper system.
+"""
+
 import numpy as np
 from scipy.integrate import solve_ivp
 
 
-def mass_spring_damper_ode(t, y, m, c, k, forcing_func):
+def _equations(t, y, m, k, c, forcing):
     x, v = y
-    F = forcing_func(t)
-    dxdt = v
-    dvdt = (F - c * v - k * x) / m
-    return [dxdt, dvdt]
+    f_ext = forcing(t) if forcing is not None else 0.0
+    a = (f_ext - c * v - k * x) / m
+    return [v, a]
 
 
 def simulate_system(
     m=1.0,
-    c=0.5,
     k=2.0,
-    forcing_func=lambda t: 0.0,
-    t_max=20.0,
+    c=0.1,
+    forcing=None,
+    t_span=(0.0, 10.0),
+    n_points=1000,
     x0=1.0,
     v0=0.0,
-    num_points=2000,
 ):
-    t_eval = np.linspace(0.0, t_max, num_points)
+    """
+    Simulate the spring-mass-damper system.
+
+    Parameters
+    ----------
+    m : float
+        Mass.
+    k : float
+        Spring constant.
+    c : float
+        Damping coefficient.
+    forcing : callable or None
+        External forcing function f(t).
+    t_span : tuple
+        Start and end time.
+    n_points : int
+        Number of time points.
+    x0 : float
+        Initial displacement.
+    v0 : float
+        Initial velocity.
+
+    Returns
+    -------
+    t : ndarray
+        Time array.
+    x : ndarray
+        Displacement array.
+    v : ndarray
+        Velocity array.
+    """
+
+    t_eval = np.linspace(t_span[0], t_span[1], n_points)
     sol = solve_ivp(
-        mass_spring_damper_ode,
-        (0.0, t_max),
+        _equations,
+        t_span,
         [x0, v0],
-        args=(m, c, k, forcing_func),
+        args=(m, k, c, forcing),
         t_eval=t_eval,
         dense_output=False,
     )
-    return t_eval, sol.y[0], sol.y[1]
+
+    x = sol.y[0]
+    v = sol.y[1]
+    return t_eval, x, v

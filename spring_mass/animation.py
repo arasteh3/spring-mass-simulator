@@ -33,6 +33,7 @@ def animate_response(t, x, m=1.0, k=2.0):
     ax.set_ylim(min(x), max(x))
     ax.set_xlabel("Time")
     ax.set_ylabel("Displacement")
+    ax.set_title("Spring-Mass-Damper Response")
 
     def init():
         line.set_data([], [])
@@ -47,7 +48,7 @@ def animate_response(t, x, m=1.0, k=2.0):
         update,
         frames=len(t),
         init_func=init,
-        interval=1000 * (t[-1] - t[0]) / len(t),
+        interval=1000.0 * (t[-1] - t[0]) / len(t),
         blit=True,
     )
 

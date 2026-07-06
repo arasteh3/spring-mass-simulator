@@ -20,8 +20,8 @@ def sinusoidal_forcing(t, amplitude=1.0, freq=1.0):
 
     Returns
     -------
-    array-like
+    ndarray
         Forcing values.
     """
 
-    return amplitude * np.sin(2 * np.pi * freq * t)
+    return amplitude * np.sin(2.0 * np.pi * freq * t)
