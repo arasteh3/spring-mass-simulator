@@ -10,4 +10,3 @@ __all__ = [
     "animate_system",
     "create_dashboard",
 ]
-
